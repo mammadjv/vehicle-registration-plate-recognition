@@ -1,0 +1,7 @@
+Header header
+
+geometry_msgs/Point last_perception
+geometry_msgs/Point position
+geometry_msgs/Point velocity
+time time_when_last_seen
+time time_when_disappeared

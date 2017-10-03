@@ -1,0 +1,10 @@
+int32 start
+int32 end
+int32 width
+int32[] widths
+geometry_msgs/Point mid
+geometry_msgs/Point base
+geometry_msgs/Point top
+geometry_msgs/Point position
+uint8 side
+float32 validity

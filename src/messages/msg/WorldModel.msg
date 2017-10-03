@@ -1,0 +1,7 @@
+Header header
+
+BallPercept ball_percept
+GoalPercept goal_percept
+LinePercept line_percept
+FieldBorder field_border
+RobotPose robot_pose

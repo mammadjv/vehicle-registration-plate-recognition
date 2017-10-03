@@ -1,0 +1,4 @@
+Header header
+geometry_msgs/Pose robot_camera_pose
+geometry_msgs/Pose camera_pose
+bool is_camera_pose_valid
