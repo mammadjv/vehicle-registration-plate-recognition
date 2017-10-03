@@ -5,26 +5,32 @@
 #include <iostream>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <vector>
-#include <messages/Image.h>
-
-using namespace std;
-using namespace cv;
-using namespace image_transport;
-
+#include <system_messages/Image.h>
 
 int main(int argc , char **argv){
     ros::init(argc,argv,"camera_node");
     ros::NodeHandle nh;
-    ImageTransport it(nh);
-    cv::VideoCapture cap(0);
-    Publisher publisher = it.advertise("/camera/image",1);
+    ros::Publisher publisher = nh.advertise <system_messages::Image> ("/camera/image",1);
     ros::Rate loopRate(30);
-    cv::Mat rgb;
+
+    cv::VideoCapture cap(0);
+    cv::Mat rgb, gray, scharred_image;
+
+    system_messages::Image::Ptr image = boost::make_shared<system_messages::Image>();
+
     while(nh.ok()){
-	     cap >> rgb;
-       cv::imshow("rgb image",rgb);
-       cv::waitKey(10);
-       ros::spinOnce();
-       loopRate.sleep();
+        // capture and convert the image
+        cap >> rgb;
+        cv::cvtColor(rgb,gray,CV_BGR2GRAY);
+        cv::blur(gray, gray,cv::Size(5,5),cv::Point(-1,-1),cv::BORDER_DEFAULT);
+        cv::Scharr(gray,scharred_image,CV_8U,0,1,1,0,cv::BORDER_DEFAULT);
+
+        sensor_msgs::ImagePtr rgb_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", rgb).toImageMsg();
+        sensor_msgs::ImagePtr scharred_msg = cv_bridge::CvImage(std_msgs::Header(),"mono8",scharred_image).toImageMsg();
+        image->rgb = *rgb_msg;
+        image->scharred = *scharred_msg;
+        publisher.publish(image);
+        ros::spinOnce();
+        loopRate.sleep();
     }
 }

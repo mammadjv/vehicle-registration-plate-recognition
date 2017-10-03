@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>messages</name>
+  <name>system_messages</name>
   <version>0.0.0</version>
   <description>The message package</description>
 

@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   rosconsole
   roscpp
   cv_bridge
-  messages
+  system_messages
   )
 
 ## System dependencies are found with CMake's conventions
