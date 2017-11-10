@@ -6,3 +6,4 @@ build*
 darknet
 yolo_data_annotator/
 *.pyc
+*Store
