@@ -43,6 +43,8 @@ find_package(catkin REQUIRED roscpp genmsg std_msgs geometry_msgs sensor_msgs)
 add_message_files(
   FILES
   Image.msg
+  Plate.msg
+  Plates.msg
 )
 
 ## Generate added messages and services with any dependencies listed here
