@@ -13,14 +13,16 @@ int main(int argc , char **argv){
     ros::Publisher publisher = nh.advertise <system_messages::Image> ("/camera/image",1);
     ros::Rate loopRate(30);
 
-    cv::VideoCapture cap(0);
+    cv::VideoCapture cap("/home/mohammad/catkin_ws/PersonRecognition/python_scripts/dataset/rgb_2.avi");
     cv::Mat rgb, gray, scharred_image;
 
     system_messages::Image::Ptr image = boost::make_shared<system_messages::Image>();
 
     while(nh.ok()){
         // capture and convert the image
-        cap >> rgb;
+	if (!cap.read(rgb))
+            break;
+
         cv::cvtColor(rgb,gray,CV_BGR2GRAY);
         cv::blur(gray, gray,cv::Size(5,5),cv::Point(-1,-1),cv::BORDER_DEFAULT);
         cv::Scharr(gray,scharred_image,CV_8U,0,1,1,0,cv::BORDER_DEFAULT);
@@ -33,4 +35,5 @@ int main(int argc , char **argv){
         ros::spinOnce();
         loopRate.sleep();
     }
+return 0;
 }

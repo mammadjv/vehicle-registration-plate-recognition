@@ -1,8 +1,8 @@
 import numpy
+import cv2
 
 class PlateDetector:
 	def __init__(self):
 		print "plate_detector module created!"
-	def on_image_received(self, image):
-		print "image received!"
-		
+	def find_location_of_plate(self, image):
+		print 'toooodooooo'
