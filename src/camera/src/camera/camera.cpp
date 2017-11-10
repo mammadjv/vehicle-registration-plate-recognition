@@ -10,7 +10,7 @@
 int main(int argc , char **argv){
     ros::init(argc,argv,"camera_node");
     ros::NodeHandle nh;
-    ros::Publisher publisher = nh.advertise <system_messages::Image> ("/camera/image",1);
+    ros::Publisher publisher = nh.advertise <system_messages::Image> ("/image",1);
     ros::Rate loopRate(30);
 
     cv::VideoCapture cap("/home/mohammad/catkin_ws/PersonRecognition/python_scripts/dataset/rgb_2.avi");
