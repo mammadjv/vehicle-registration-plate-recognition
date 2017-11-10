@@ -3,3 +3,5 @@ devel
 build*
 *~
 *.usr
+darknet
+yolo_data_annotator/
