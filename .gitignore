@@ -8,3 +8,4 @@ yolo_data_annotator/
 *.pyc
 *Store
 *user
+faster_rcnn/

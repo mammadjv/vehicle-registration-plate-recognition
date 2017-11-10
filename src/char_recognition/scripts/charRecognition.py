@@ -1,5 +1,8 @@
 import numpy
 import cv2
+import sys
+
+sys.path.append('./faster_rcnn')
 
 class CharRecognizer:
 	def __init__(self):
