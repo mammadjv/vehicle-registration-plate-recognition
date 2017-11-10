@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="char_recognition" type="charRecognitionBase.py" name="char_recognition" output="screen"/>
+</launch>
