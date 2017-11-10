@@ -5,10 +5,17 @@ project(plate_detector)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
   rospy
+  image_transport
+  rosconsole
+  roscpp
+  cv_bridge
+  system_messages
 )
 
+find_package(OpenCV REQUIRED)
+
+catkin_python_setup()
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -152,12 +159,16 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
+install(PROGRAMS 
+	scripts/plateDetectorBase.py
+	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 ## Mark executables and/or libraries for installation
-# install(TARGETS plate_detector plate_detector_node
+#install(TARGETS plate_detector plate_detector_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+#)
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/
@@ -166,6 +177,10 @@ include_directories(
 #   PATTERN ".svn" EXCLUDE
 # )
 
+install(FILES
+ 	launch/plateDetector.launch
+	DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
 #   # myfile1

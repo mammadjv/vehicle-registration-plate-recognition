@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="plate_detector" type="plateDetectorBase.py" name="plate_detector" output="screen"/>
+</launch>
