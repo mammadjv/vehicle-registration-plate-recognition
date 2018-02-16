@@ -9,3 +9,6 @@ class CharRecognizer:
 		print "char_recognition module created!"
 	def find_location_of_characters(self, image):
 		print 'toooodooooo'
+	def find_char_sequences(self, image, plates_location):
+		for plate in plates_location:
+			plate_image = image[plate['y_begin']:plate['y_end'],plate['y_begin']:plate['y_end']]

@@ -20,8 +20,12 @@ class CharRecognizerBase(CharRecognizer):
 		ts = message_filters.TimeSynchronizer([image_subscriber, plates_subscriber], 10)
 		ts.registerCallback(on_data_fully_received)
 
-	def on_data_fully_received(self, image, plates):
-		print 'khar!'
+	def on_data_fully_received(self, image, plates_location_msg):
+		plates_location = []
+		for plate_location in plates_location_msg:
+			plate_point = {"x_begin" : plate_location.top_left.x,"y_begin" : plate_location.top_left.y, "x_end" : plate_location.down_right.x, "y_end" : plate_location.down_right.y}
+			plates_location.append(plate_point)
+#		self.find_char_sequences(image, plates)	
 
 if __name__ == '__main__':
 	charRecognizer = CharRecognizerBase()
