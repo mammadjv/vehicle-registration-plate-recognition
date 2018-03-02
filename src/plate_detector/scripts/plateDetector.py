@@ -13,3 +13,4 @@ class PlateDetector:
 	def find_location_of_plate(self, image):
 		print 'toooodooooo'
 		bboxes = self.position_detector.detect(image)
+		return bboxes

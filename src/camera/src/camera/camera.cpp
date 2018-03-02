@@ -8,7 +8,7 @@
 #include <system_messages/Image.h>
 #include <std_msgs/Bool.h>
 
-cv::VideoCapture cap("/home/mohammad/catkin_ws/PersonRecognition/python_scripts/dataset/rgb_2.avi");
+cv::VideoCapture cap("/home/mj/datasets/lprData/20160412-115602.avi");
 cv::Mat rgb, gray, scharred_image;
 
 class ImagePubSub{

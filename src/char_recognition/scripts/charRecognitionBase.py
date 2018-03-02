@@ -9,16 +9,18 @@ from system_messages.msg import Image
 from system_messages.msg import Plates
 from system_messages.msg import Plate
 from geometry_msgs.msg import Point
+import message_filters
+from message_filters import TimeSynchronizer, Subscriber
 
 class CharRecognizerBase(CharRecognizer):
 	def __init__(self):
 		CharRecognizer.__init__(self)
 		self.bridge = CvBridge()
 		rospy.init_node('char_recognition_node', anonymous=True)
-		image_subscriber = rospy.Subscriber("/image", Image)
-		plates_subscriber = rospy.Subscriber("/plates", Plates)
+		image_subscriber = message_filters.Subscriber("/image", Image)
+		plates_subscriber = message_filters.Subscriber("/plates", Plates)
 		ts = message_filters.TimeSynchronizer([image_subscriber, plates_subscriber], 10)
-		ts.registerCallback(on_data_fully_received)
+		ts.registerCallback(self.on_data_fully_received)
 
 	def on_data_fully_received(self, image, plates_location_msg):
 		plates_location = []
