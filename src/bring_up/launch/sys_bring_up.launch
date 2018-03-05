@@ -1,7 +1,12 @@
 <launch>
-    <node pkg="camera"    type="camera_node"    name="camera"    output="screen"/>
-    <node pkg="plate_detector" type="plateDetectorBase.py" name="plate_detector" output="screen"/>
+
+
     <node pkg="char_recognition" type="charRecognitionBase.py" name="char_recognition" output="screen"/>
+    <node pkg="plate_detector" type="plateDetectorBase.py" name="plate_detector" output="screen"/>
+    <node pkg="camera"    type="camera_node"    name="camera"    output="screen"/>
+
+<!--    <node pkg="plate_detector" type="plateDetectorBase.py" name="plate_detector" output="screen"/> -->
+<!--    <node pkg="char_recognition" type="charRecognitionBase.py" name="char_recognition" output="screen"/> -->
 
 <!--    <node pkg="behavior"  type="behavior_node"  name="behavior"  output="screen"/> -->
 <!--    <node name="game_controller" pkg="rcup_game_controller" type="game_controller" output="screen"/> -->

@@ -15,7 +15,8 @@ class ImagePubSub{
 public:
 	ros::Publisher publisher;
 	ros::Subscriber sub;
-	void cycleCallback(const std_msgs::Bool::ConstPtr& cycle_completed){
+	void cycleCallback(const std_msgs::BoolConstPtr& cycle_completed){
+		std::cout << "@@@@@@@@@@@@@@@@@@@@@@@2\n";
                 if(cycle_completed->data == true){
                         if (!cap.read(rgb))
                                 return;
@@ -24,11 +25,13 @@ public:
         };
 
 	ImagePubSub(ros::NodeHandle nh){
-	    	publisher = nh.advertise <system_messages::Image> ("/image",1);
-    		sub = nh.subscribe("/cycle_completed", 1000, &ImagePubSub::cycleCallback,this);
+	    	this->publisher = nh.advertise <system_messages::Image> ("/image",1);
+//    		this->sub = nh.subscribe("/cycle_completed", 1, &ImagePubSub::cycleCallback,this);
 	};
 
-	void publish(cv::Mat rgb){
+	void publish(cv::Mat img){
+		cv::Mat rgb;
+		cv::resize(img,rgb,cv::Size(600,400));
 	        system_messages::Image::Ptr image = boost::make_shared<system_messages::Image>();
 	        cv::cvtColor(rgb,gray,CV_BGR2GRAY);
 	        cv::blur(gray, gray,cv::Size(5,5),cv::Point(-1,-1),cv::BORDER_DEFAULT);
@@ -45,10 +48,17 @@ int main(int argc , char **argv){
     ros::init(argc,argv,"camera_node");
     ros::NodeHandle nh;
     ImagePubSub *image_pub_sub = new ImagePubSub(nh);
-    if (!cap.read(rgb))
-    	return 0;
-    image_pub_sub->publish(rgb);
+    ros::Rate r(10);
+    while (cap.read(rgb) && ros::ok()){
+	image_pub_sub->publish(rgb);
+	ros::spinOnce();
+	r.sleep();
+    }
+ //if (cap.read(rgb) && ros::ok()){
+//	   image_pub_sub->publish(rgb);
 //    ros::spinOnce();
-    ros::spin();
-return 0;
+//	r.sleep();
+//	    ros::spin();
+//}
+//return 0;
 }
