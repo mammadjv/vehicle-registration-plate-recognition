@@ -15,6 +15,8 @@ class PatternPerceptor:
 		self.transformer.set_raw_scale('data', 255)      # rescale from [0, 1] to [0, 255]
 		self.transformer.set_channel_swap('data', (2,1,0))  # swap channels from RGB to BGR
 	def recognize(self,source):
+		caffe.set_mode_gpu()
+		caffe.set_device(0)
 		start = time.time()
 		image = source
 		transformed_image = self.transformer.preprocess('data', image)

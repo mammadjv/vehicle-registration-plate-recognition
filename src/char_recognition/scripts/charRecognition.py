@@ -1,33 +1,59 @@
 import numpy
 import cv2
 import sys
+from operator import itemgetter, attrgetter
 from pattern_perceptor import PatternPerceptor
 #sys.path.append('./faster_rcnn')
+import time
+import numpy as np
 
 class CharRecognizer:
 	def __init__(self):
 		print "char_recognition module created!"
-		self.pattern_perceptor = PatternPerceptor('/home/mj/datasets/numbers/deploy.prototxt','/home/mj/datasets/numbers/squeezenet_v1.1.caffemodel')
+		self.pattern_perceptor = PatternPerceptor('/home/mj/datasets/numbers/deploy.prototxt', '/home/mj/datasets/numbers/squeezenet_v1.1.caffemodel')
 #	def find_location_of_characters(self, image):
 #		print 'toooodooooo'
 
 	def find_char_sequences(self, image, plates_location):
 		char_list = list()
+		croped_images = list()
 		for plate in plates_location:
-			plate_image = image[plate['y_begin']:plate['y_end'],plate['y_begin']:plate['y_end']]
-			characters = self.find_characters(plate_image)
-			char_list.append(characters)
-		return char_list
+			plate_image = image[plate['y_begin']:plate['y_end'], plate['x_begin']:plate['x_end']]
+			plate_image = cv2.resize(plate_image,(370,83))
+			bounding_rects = self.find_bounding_rects(plate_image)
+			draw_image = plate_image.copy()
+			for cnt in bounding_rects:
+				x_begin = cnt['x_begin']
+				y_begin = cnt['y_begin']
+				x_end = cnt['x_end']
+				y_end = cnt['y_end']
+				cv2.rectangle(draw_image,(x_begin,y_begin),(x_end,y_end),(255,255,0),2)
+			cv2.imshow('draw', draw_image)
+			cv2.waitKey(20)
+			if (len(bounding_rects) < 8):
+				continue
+#			print bounding_rects
+			self.find_chars_type(bounding_rects, plate_image)
+			char_list.append(bounding_rects)
+			croped_images.append(cv2.resize(plate_image,(120,30)))
+		return char_list , croped_images
 
-	def get_contours_bounding_rect(contours):
+	def find_chars_type(self, bounding_rects, croped_image):
+		for cnt in bounding_rects:
+			y_begin, y_end , x_begin , x_end = cnt['y_begin'],cnt['y_end'], cnt['x_begin'],cnt['x_end']
+			char_image = croped_image[ y_begin:y_end, x_begin:x_end]
+			char_type = self.pattern_perceptor.recognize(char_image)
+			cnt['type'] = char_type
+
+	def get_contours_bounding_rect(self, contours):
 		bounding_rects = []
 		for cnt in contours:
 	        	x,y,w,h = cv2.boundingRect(cnt)
-			bounding_rect = {'x_begin':x , 'y_begin':y, 'x_end':x+w, 'y_end':y+h}
+			bounding_rect = {'x_begin':x , 'y_begin':y, 'x_end':x+w, 'y_end':y+h , 'type':'nothing'}
 			bounding_rects.append(bounding_rect)
 		return bounding_rects
 
-	def remove_abuse_contours(bounding_rects, w_max, image_width, image_height):
+	def remove_abuse_contours(self, bounding_rects, w_max, image_width, image_height):
 		selected_contours = []
 		for i in range(len(bounding_rects)-1,-1,-1):
 			cnt  = bounding_rects[i]
@@ -58,10 +84,9 @@ class CharRecognizer:
 		return selected_contours	
 
 
-	def find_characters(self, image):
+	def find_bounding_rects(self, image):
 		width_0 =  image.shape[1]
 		height_0 = image.shape[0]
-		image = cv2.resize(image,(370,83))
 		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 		start = time.time()
 		kernel = np.ones((3,3),np.uint8)
@@ -81,9 +106,14 @@ class CharRecognizer:
 
 	#	cv2.imshow('gray_open_closed' , gray)
 		thresh = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,15,2)
-		thresh = cv2.erode(thresh,kernel,iterations = 1)
-		thresh = cv2.dilate(thresh,kernel,iterations = 1)
+#		thresh = cv2.erode(thresh,kernel,iterations = 1)
+#		thresh = cv2.dilate(thresh,kernel,iterations = 1)
 		__, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+		if(len(contours) < 8):
+			return list()
 		bounding_rects = self.get_contours_bounding_rect(contours)
 		bounding_rects = self.remove_abuse_contours(bounding_rects, thresh.shape[1]/2,thresh.shape[1],thresh.shape[0])
+		if(len(contours) < 8):
+			return list()
+#		bounding_rects = bounding_rects.sort(key=lambda bounding_rects: bounding_rects.x_begin, reverse=False)
 		return bounding_rects

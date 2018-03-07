@@ -18,7 +18,7 @@ class PlateDetectorBase(PlateDetector):
 		self.image_subscriber = rospy.Subscriber("/image", ImageMsg, self.on_image_received)
 		self.plates_publisher = rospy.Publisher('/plates', Plates, queue_size=1000)
 		self.cycle_complete_publisher = rospy.Publisher('/cycle_completed',Bool,queue_size = 1)
-		self.show_image_publisher = rospy.Publisher('/show_image', Image, queue_size=1)
+		self.show_image_publisher = rospy.Publisher('/all_image', Image, queue_size=1)
 		self.r = rospy.Rate(10)
 		self.bridge = CvBridge()
 	def on_image_received(self, image):
@@ -56,7 +56,7 @@ class PlateDetectorBase(PlateDetector):
 				plate_msg.down_right.x = bbox[2]
 				plate_msg.down_right.y = bbox[3]
 				plates_msg.plates.append(plate_msg)
-				cv2.rectangle(paint_image,(bbox[0],bbox[1]),(bbox[2],bbox[3]),(0,255,0),3)
+				cv2.rectangle(paint_image, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0,255,0), 1)
 			self.plates_publisher.publish(plates_msg)
 		self.show_image_publisher.publish(self.bridge.cv2_to_imgmsg(paint_image, "bgr8"))
 		
