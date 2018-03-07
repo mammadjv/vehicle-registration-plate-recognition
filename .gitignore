@@ -9,3 +9,4 @@ yolo_data_annotator/
 *Store
 *user
 faster_rcnn/
+*.swp

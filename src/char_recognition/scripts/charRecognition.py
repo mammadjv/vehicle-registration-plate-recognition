@@ -1,15 +1,15 @@
 import numpy
 import cv2
 import sys
-
+from pattern_perceptor import PatternPerceptor
 #sys.path.append('./faster_rcnn')
 
 class CharRecognizer:
 	def __init__(self):
 		print "char_recognition module created!"
-
-	def find_location_of_characters(self, image):
-		print 'toooodooooo'
+		self.pattern_perceptor = PatternPerceptor('/home/mj/datasets/numbers/deploy.prototxt','/home/mj/datasets/numbers/squeezenet_v1.1.caffemodel')
+#	def find_location_of_characters(self, image):
+#		print 'toooodooooo'
 
 	def find_char_sequences(self, image, plates_location):
 		char_list = list()
