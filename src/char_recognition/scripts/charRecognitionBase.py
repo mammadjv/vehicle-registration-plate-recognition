@@ -47,7 +47,7 @@ class CharRecognizerBase(CharRecognizer):
 				continue
 			plates_image = np.concatenate((plates_image, croped), axis=0)
 			i = i + 1
-		self.plates_image_publisher.publish(self.bridge.cv2_to_imgmsg(plates_image, "bgr8"))	
+		self.plates_image_publisher.publish(self.bridge.cv2_to_imgmsg(plates_image, "bgr8"))
 		self.cycle_state_publisher.publish(cycle_state_msg)
 
 if __name__ == '__main__':

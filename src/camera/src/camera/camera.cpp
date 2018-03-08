@@ -8,7 +8,7 @@
 #include <system_messages/ImageMsg.h>
 #include <std_msgs/Bool.h>
 
-cv::VideoCapture cap("/home/mj/datasets/lprData/20160414-095019.avi");
+cv::VideoCapture cap("/home/mj/datasets/lprData/20160423-102105.avi");
 cv::Mat rgb, gray, scharred_image;
 
 //std::vector<cv::Mat> captured;

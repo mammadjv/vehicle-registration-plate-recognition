@@ -9,6 +9,7 @@ import numpy as np
 
 class CharRecognizer:
 	def __init__(self):
+		self.i = 0
 		print "char_recognition module created!"
 		self.pattern_perceptor = PatternPerceptor('/home/mj/datasets/numbers/deploy.prototxt', '/home/mj/datasets/numbers/squeezenet_v1.1.caffemodel')
 #	def find_location_of_characters(self, image):
@@ -19,6 +20,8 @@ class CharRecognizer:
 		croped_images = list()
 		for plate in plates_location:
 			plate_image = image[plate['y_begin']:plate['y_end'], plate['x_begin']:plate['x_end']]
+#			cv2.imwrite('/home/mj/workspace/vehicle-registration-plate-recognition/plates/'+str(self.i)+'.jpg',plate_image)
+#			self.i = self.i + 1
 			plate_image = cv2.resize(plate_image,(370,83))
 			bounding_rects = self.find_bounding_rects(plate_image)
 			draw_image = plate_image.copy()
