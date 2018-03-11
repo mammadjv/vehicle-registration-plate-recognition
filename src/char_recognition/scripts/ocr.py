@@ -96,7 +96,7 @@ def remove_abuse_contours(thresh_image,bounding_rects, w_max, image_width, image
                 	continue
 		contour_image = thresh_image[cnt['y_begin']:cnt['y_end'], cnt['x_begin']:cnt['x_end']]
 		whites =  float(len(np.where((contour_image == 255))[0]))
-
+#		print np.where((contour_image == 255))
 		if ((w < image_width/10 and h < image_height/5 and (whites)/(w*h) > 0.1)):
 			bounding_rects.pop(i)
 			continue
@@ -231,7 +231,7 @@ for f in pic_files:
 		upper_down_contours = find_upper_down_contour(thresh_eroded_1x35)
 		if(len(upper_down_contours) == 2):
 #			print 'shiiiiit'
-			print upper_down_contours
+#			print upper_down_contours
 			thresh = thresh[upper_down_contours[0]['y_end']:upper_down_contours[1]['y_begin'],0:thresh_eroded_1x35.shape[1]-1].copy()
 			draw_rgb_image = image[upper_down_contours[0]['y_end']:upper_down_contours[1]['y_begin'],0:thresh_eroded_1x35.shape[1]-1]
 		if(len(upper_down_contours) == 1):
@@ -245,9 +245,16 @@ for f in pic_files:
 				draw_rgb_image = image[1:upper_down_contours[0]['y_begin'],0:thresh_eroded_1x35.shape[1]-1]
 				thresh = thresh[1:upper_down_contours[0]['y_begin'],0:thresh_eroded_1x35.shape[1]-1]
 				thresh_eroded_1x35 = thresh_eroded_1x35[1:upper_down_contours[0]['y_begin'],0:thresh_eroded_1x35.shape[1]-1]
+
+	thresh[0:1,0:thresh.shape[1]-1] = 0
+	thresh[thresh.shape[0]-1:thresh.shape[0],0:thresh.shape[1]-1] = 0
+
+	thresh[0:thresh.shape[0],0:1] = 0
+	thresh[0:thresh.shape[0],thresh.shape[1]-1:thresh.shape[1]] = 0
+#		thresh[0:thresh.shape[0]-1,] = 0
 #		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 		#gray[np.where((gray == 0))] = 150
-		print thresh.shape
+#		print thresh.shape
 #		rect = cv2.minAreaRect(cnt)
 #		box = cv2.boxPoints(rect)
 #		box = np.int0(box)
