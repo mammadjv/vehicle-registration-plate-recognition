@@ -38,7 +38,7 @@ def find_upper_down_contour(thresh):
 			rect = cv2.minAreaRect(cnt['cnt'])
 			box = cv2.boxPoints(rect)
 			box = np.int0(box)
-			cv2.drawContours(image,[box],0,(0,0,255),2)
+#			cv2.drawContours(image,[box],0,(0,0,255),2)
 			box = sorted(box, key=lambda k: k[0])
 			begin = (box[0]+box[1])/2
 			end = (box[2]+box[3])/2
@@ -100,23 +100,41 @@ def remove_abuse_contours(thresh_image,bounding_rects, w_max, image_width, image
 		if ((w < image_width/10 and h < image_height/5 and (whites)/(w*h) > 0.1)):
 			bounding_rects.pop(i)
 			continue
-	selected_contours = bounding_rects		
-	return selected_contours
-#	for i in range(len(bounding_rects)-1,-1,-1):
-#		contour_inside_numbers = 0
-#		cnt1  = bounding_rects[i]
-#		selected_j = 0
-#		for j in range(len(bounding_rects)-1,-1,-1):
-#			cnt2 = bounding_rects[j]
-#			if(cnt2['x_begin'] > cnt1['x_begin'] and cnt2['x_end'] < cnt1['x_end'] and cnt2['y_begin'] > cnt1['y_begin'] and cnt2['y_end'] < cnt1['y_end']):
-#				contour_inside_numbers = contour_inside_numbers + 1
-#				selected_j = j
-#		if(contour_inside_numbers == 1):
-#			bounding_rects.pop(selected_j)
-#		if(contour_inside_numbers > 1):
-#			aspect_ratio = float(cnt1['x_end'] - cnt1['x_begin'])/float(cnt1['y_end'] - cnt1['y_begin'])
-#			if(aspect_ratio > 0.5):
-#				bounding_rects.pop(i)
+#	selected_contours = bounding_rects		
+#	return selected_contours
+	## delete full inside contours
+	for i in range(len(bounding_rects)-1,-1,-1):
+		contour_inside_numbers = 0
+		cnt1  = bounding_rects[i]
+		selected_j = 0
+		for j in range(len(bounding_rects)-1,-1,-1):
+			if(i == j):
+				continue
+			cnt2 = bounding_rects[j]
+			if(cnt2['x_begin'] >= cnt1['x_begin'] and cnt2['x_end'] <= cnt1['x_end'] and cnt2['y_begin'] >= cnt1['y_begin'] and cnt2['y_end'] <= cnt1['y_end']):
+				contour_inside_numbers = contour_inside_numbers + 1
+				selected_j = j
+		if(contour_inside_numbers == 1):
+			bounding_rects.pop(selected_j)
+		if(contour_inside_numbers > 1):
+			aspect_ratio = float(cnt1['x_end'] - cnt1['x_begin'])/float(cnt1['y_end'] - cnt1['y_begin'])
+			if(aspect_ratio > 0.5):
+				bounding_rects.pop(i)
+#	selected_contours = bounding_rects		
+#	return selected_contours
+	## delete semi inside contours
+	for i in range(len(bounding_rects)-1,-1,-1):
+		contour_inside_numbers = 0
+		cnt1  = bounding_rects[i]
+		selected_j = 0
+		for j in range(len(bounding_rects)-1,-1,-1):
+			if(i == j):
+				continue
+			cnt2 = bounding_rects[j]
+			if(cnt2['x_begin'] > cnt1['x_begin'] and cnt2['x_begin'] < cnt1['x_end'] and \
+#cnt2['x_end'] >= cnt1['x_end'] and\
+is_between(cnt1,cnt2) and float(cnt1['x_end']-cnt2['x_begin'])/float(cnt2['x_end']-cnt2['x_begin']) > 0.5):
+				cnt1['x_end'] = cnt2['x_begin']
 #	selected_contours = bounding_rects		
 #	return selected_contours
 	for i in range(len(bounding_rects)-1,-1,-1):
@@ -136,7 +154,7 @@ def remove_abuse_contours(thresh_image,bounding_rects, w_max, image_width, image
 	return selected_contours
 	
 croped_nums = 0
-pic_path = "/home/mohammad/Desktop/Parallels Shared Folders/Home/Documents/Learning/Bachelor Thesis/plates/4/"
+pic_path = "/home/mohammad/Desktop/Parallels Shared Folders/Home/Documents/Learning/Bachelor Thesis/plates/1/"
 #pic_path = "/home/mohammad/Documents/char_analyzer/sample_plates_backup/"
 
 pic_files = [f for f in listdir(pic_path) if isfile(join(pic_path, f)) and f.endswith(".jpg")]
@@ -233,13 +251,13 @@ for f in pic_files:
 #			print 'shiiiiit'
 #			print upper_down_contours
 			thresh = thresh[upper_down_contours[0]['y_end']:upper_down_contours[1]['y_begin'],0:thresh_eroded_1x35.shape[1]-1].copy()
-			draw_rgb_image = image[upper_down_contours[0]['y_end']:upper_down_contours[1]['y_begin'],0:thresh_eroded_1x35.shape[1]-1]
+			draw_rgb_image = image[upper_down_contours[0]['y_end']:upper_down_contours[1]['y_begin'],0:thresh_eroded_1x35.shape[1]-1].copy()
 		if(len(upper_down_contours) == 1):
 #			print "annnnnnnnnnnnnnnnnn"
 			if(upper_down_contours[0]['y_end'] < thresh_eroded_1x35.shape[0]/2):
-				draw_rgb_image = image[upper_down_contours[0]['y_end']:thresh_eroded_1x35.shape[0]-1,0:thresh_eroded_1x35.shape[1]-1]
-				thresh = thresh[upper_down_contours[0]['y_end']:thresh_eroded_1x35.shape[0]-1,0:thresh_eroded_1x35.shape[1]-1]
-				thresh_eroded_1x35 = thresh_eroded_1x35[upper_down_contours[0]['y_end']:thresh_eroded_1x35.shape[0]-1,0:thresh_eroded_1x35.shape[1]-1]
+				draw_rgb_image = image[upper_down_contours[0]['y_end']:thresh_eroded_1x35.shape[0]-1,0:thresh_eroded_1x35.shape[1]-1].copy()
+				thresh = thresh[upper_down_contours[0]['y_end']:thresh_eroded_1x35.shape[0]-1,0:thresh_eroded_1x35.shape[1]-1].copy()
+				thresh_eroded_1x35 = thresh_eroded_1x35[upper_down_contours[0]['y_end']:thresh_eroded_1x35.shape[0]-1,0:thresh_eroded_1x35.shape[1]-1].copy()
 
 			else:
 				draw_rgb_image = image[1:upper_down_contours[0]['y_begin'],0:thresh_eroded_1x35.shape[1]-1]
@@ -283,7 +301,10 @@ for f in pic_files:
 #	thresh = cv2.erode(thresh,kernel,iterations = 1)
 #	thresh = thresh - thresh_eroded_1x35
 #	thresh = cv2.dilate(thresh,kernel11x11,iterations = 1)
-#	thresh = cv2.erode(thresh,kernel5x1,iterations = 1)
+#	thresh = cv2.erode(thresh,kernel3x1,iterations = 1)
+	thresh_subsection = thresh[3*thresh.shape[0]/5:thresh.shape[0],0:thresh.shape[1]]
+	thresh_subsection = cv2.erode(thresh_subsection,kernel5x1,iterations = 1)
+	ret , thresh = cv2.threshold(thresh,254,255,cv2.THRESH_BINARY)
 #	thresh = cv2.resize(thresh,(140,80))
 	__, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 	
