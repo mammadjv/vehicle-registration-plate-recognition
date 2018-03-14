@@ -8,10 +8,24 @@ import math
 import imutils
 
 
+kernel5x1 = np.ones((5,1),np.uint8)
+kernel5x5 = np.ones((5,5),np.uint8)
+kernel5x3 = np.ones((5,3),np.uint8)
+kernel3x5 = np.ones((3,5),np.uint8)
+kernel3x3 = np.ones((3,3),np.uint8)
+kernel3x1 = np.ones((3,1),np.uint8)
+kernel1x3 = np.ones((1,3),np.uint8)
+kernel1x5 = np.ones((1,5),np.uint8)
+kernel35x1 = np.ones((39,1),np.uint8)
+kernel1x35 = np.ones((1,39),np.uint8)
+kernel9x9 = np.ones((9,9),np.uint8)
+kernel11x11 = np.ones((11,11),np.uint8)
+
+
+
+
 def find_upper_down_contour(thresh):
 	__, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-#	bounding_rects = get_contours_bounding_rect(contours)
-#	bounding_rects = sorted(bounding_rects, key=lambda k: k['x_begin'])
 	selected_boundaries = list()
 	upper_contour = None
 	down_contour = None
@@ -61,16 +75,6 @@ def get_contours_bounding_rect(contours):
 	        x,y,w,h = cv2.boundingRect(cnt)
 		bounding_rect = {'x_begin':x , 'y_begin':y, 'x_end':x+w, 'y_end':y+h}
 		bounding_rects.append(bounding_rect)
-#		M = cv2.moments(cnt)
-#		print "@@@@"
-#		print cnt
-#		if(M['m00'] == 0):
-#			continue
-#		cx = int(M['m10']/M['m00'])
- #   		cy = int(M['m01']/M['m00'])
-#		cv2.circle(image,(cx,cy),1,(0,255,0),1)
-#		hull = cv2.convexHull(cnt)
-#		cv2.drawContours(image,hull,-1,(0,0,255),1)
 	return bounding_rects
 
 
@@ -96,7 +100,6 @@ def remove_abuse_contours(thresh_image,bounding_rects, w_max, image_width, image
                 	continue
 		contour_image = thresh_image[cnt['y_begin']:cnt['y_end'], cnt['x_begin']:cnt['x_end']]
 		whites =  float(len(np.where((contour_image == 255))[0]))
-#		print np.where((contour_image == 255))
 		if ((w < image_width/10 and h < image_height/5 and (whites)/(w*h) > 0.1)):
 			bounding_rects.pop(i)
 			continue
@@ -153,35 +156,24 @@ is_between(cnt1,cnt2) and float(cnt1['x_end']-cnt2['x_begin'])/float(cnt2['x_end
 	selected_contours = bounding_rects		
 	return selected_contours
 	
-croped_nums = 0
-pic_path = "/home/mohammad/Desktop/Parallels Shared Folders/Home/Documents/Learning/Bachelor Thesis/plates/1/"
-#pic_path = "/home/mohammad/Documents/char_analyzer/sample_plates_backup/"
-
-pic_files = [f for f in listdir(pic_path) if isfile(join(pic_path, f)) and f.endswith(".jpg")]
-#thefile = open('annotation.txt','w')
-for f in pic_files:
-	image = cv2.imread(pic_path+f)
-#	image = cv2.resize(image,(0,0), fx = 4 , fy = 3)
-	print f
-	width_0 =  image.shape[1]
-	height_0 = image.shape[0]
+def get_best_contours(image)
 	start = time.time()
-	image = cv2.resize(image,(300,150))
+#	image = cv2.resize(image,(300,150))
 	gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 	gray = cv2.blur(gray,(3,3))
 	start = time.time()
-	kernel5x1 = np.ones((5,1),np.uint8)
-	kernel5x5 = np.ones((5,5),np.uint8)
-	kernel5x3 = np.ones((5,3),np.uint8)
-	kernel3x5 = np.ones((3,5),np.uint8)
-	kernel3x3 = np.ones((3,3),np.uint8)
-	kernel3x1 = np.ones((3,1),np.uint8)
-	kernel1x3 = np.ones((1,3),np.uint8)
-	kernel1x5 = np.ones((1,5),np.uint8)
-	kernel35x1 = np.ones((39,1),np.uint8)
-	kernel1x35 = np.ones((1,39),np.uint8)
-	kernel9x9 = np.ones((9,9),np.uint8)
-	kernel11x11 = np.ones((11,11),np.uint8)
+#	kernel5x1 = np.ones((5,1),np.uint8)
+#	kernel5x5 = np.ones((5,5),np.uint8)
+#	kernel5x3 = np.ones((5,3),np.uint8)
+#	kernel3x5 = np.ones((3,5),np.uint8)
+#	kernel3x3 = np.ones((3,3),np.uint8)
+#	kernel3x1 = np.ones((3,1),np.uint8)
+#	kernel1x3 = np.ones((1,3),np.uint8)
+#	kernel1x5 = np.ones((1,5),np.uint8)
+#	kernel35x1 = np.ones((39,1),np.uint8)
+#	kernel1x35 = np.ones((1,39),np.uint8)
+#	kernel9x9 = np.ones((9,9),np.uint8)
+#	kernel11x11 = np.ones((11,11),np.uint8)
 	
 #	gray = cv2.Sobel(gray,cv2.CV_8UC1,1,0,ksize=3)
 #	gray = cv2.erode(gray,kernel,iterations = 5)
@@ -312,7 +304,7 @@ for f in pic_files:
 	bounding_rects = sorted(bounding_rects, key=lambda k: k['x_begin'])
 	bounding_rects = remove_abuse_contours(thresh, bounding_rects, thresh.shape[1]/2,thresh.shape[1],thresh.shape[0])
 
-	print time.time() - start	
+	print time.time() - start
 	for cnt in bounding_rects:
 		x_begin = cnt['x_begin']
 		y_begin = cnt['y_begin']
@@ -326,7 +318,9 @@ for f in pic_files:
 		y_begin = cnt['y_begin']
 		x_end = cnt['x_end']
 		y_end = cnt['y_end']
-		cv2.rectangle(draw_rgb_image,(x_begin,y_begin),(x_end,y_end),(255,255,0),2)
+#		cv2.rectangle(draw_rgb_image,(x_begin,y_begin),(x_end,y_end),(255,255,0),2)
+
+	return bounding_rects
 
 	cv2.imshow('thresh', thresh)
 	cv2.namedWindow('thresh',cv2.WINDOW_NORMAL)

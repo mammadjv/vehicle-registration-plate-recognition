@@ -6,6 +6,8 @@ from pattern_perceptor import PatternPerceptor
 #sys.path.append('./faster_rcnn')
 import time
 import numpy as np
+import ocr as ocr
+
 
 class CharRecognizer:
 	def __init__(self):
@@ -22,7 +24,7 @@ class CharRecognizer:
 			plate_image = image[plate['y_begin']:plate['y_end'], plate['x_begin']:plate['x_end']]
 #			cv2.imwrite('/home/mj/workspace/vehicle-registration-plate-recognition/plates/'+str(self.i)+'.jpg',plate_image)
 #			self.i = self.i + 1
-			plate_image = cv2.resize(plate_image,(370,83))
+			plate_image = cv2.resize(plate_image,(300,150))
 			bounding_rects = self.find_bounding_rects(plate_image)
 			draw_image = plate_image.copy()
 			for cnt in bounding_rects:
@@ -30,7 +32,7 @@ class CharRecognizer:
 				y_begin = cnt['y_begin']
 				x_end = cnt['x_end']
 				y_end = cnt['y_end']
-				cv2.rectangle(draw_image,(x_begin,y_begin),(x_end,y_end),(255,255,0),2)
+#				cv2.rectangle(draw_image,(x_begin,y_begin),(x_end,y_end),(255,255,0),2)
 #			cv2.imshow('draw', draw_image)
 #			cv2.waitKey(20)
 			if (len(bounding_rects) < 8):
@@ -88,6 +90,8 @@ class CharRecognizer:
 
 
 	def find_bounding_rects(self, image):
+		bounding_rects = ocr.get_best_contours(image)
+		return bounding_rects
 		width_0 =  image.shape[1]
 		height_0 = image.shape[0]
 		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
