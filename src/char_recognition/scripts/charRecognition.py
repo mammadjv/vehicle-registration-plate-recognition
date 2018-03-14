@@ -11,7 +11,7 @@ class CharRecognizer:
 	def __init__(self):
 		self.i = 0
 		print "char_recognition module created!"
-		self.pattern_perceptor = PatternPerceptor('/home/mj/datasets/numbers/deploy.prototxt', '/home/mj/datasets/numbers/squeezenet_v1.1.caffemodel')
+		self.pattern_perceptor = PatternPerceptor('/home/mj/datasets/ocr_data/train/deploy.prototxt', '/home/mj/datasets/ocr_data/train/numbers.caffemodel')
 #	def find_location_of_characters(self, image):
 #		print 'toooodooooo'
 
@@ -31,8 +31,8 @@ class CharRecognizer:
 				x_end = cnt['x_end']
 				y_end = cnt['y_end']
 				cv2.rectangle(draw_image,(x_begin,y_begin),(x_end,y_end),(255,255,0),2)
-			cv2.imshow('draw', draw_image)
-			cv2.waitKey(20)
+#			cv2.imshow('draw', draw_image)
+#			cv2.waitKey(20)
 			if (len(bounding_rects) < 8):
 				continue
 #			print bounding_rects
