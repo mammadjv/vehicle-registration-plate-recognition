@@ -25,13 +25,14 @@ class CharRecognizer:
 #			cv2.imwrite('/home/mj/workspace/vehicle-registration-plate-recognition/plates/'+str(self.i)+'.jpg',plate_image)
 #			self.i = self.i + 1
 			plate_image = cv2.resize(plate_image,(300,150))
-			bounding_rects = self.find_bounding_rects(plate_image)
+			bounding_rects, plate_image = self.find_bounding_rects(plate_image)
 			draw_image = plate_image.copy()
-			for cnt in bounding_rects:
-				x_begin = cnt['x_begin']
-				y_begin = cnt['y_begin']
-				x_end = cnt['x_end']
-				y_end = cnt['y_end']
+			
+			#for cnt in bounding_rects:
+			#	x_begin = cnt['x_begin']
+			#	y_begin = cnt['y_begin']
+			#	x_end = cnt['x_end']
+			#	y_end = cnt['y_end']
 #				cv2.rectangle(draw_image,(x_begin,y_begin),(x_end,y_end),(255,255,0),2)
 #			cv2.imshow('draw', draw_image)
 #			cv2.waitKey(20)
@@ -44,9 +45,13 @@ class CharRecognizer:
 		return char_list , croped_images
 
 	def find_chars_type(self, bounding_rects, croped_image):
-		for cnt in bounding_rects:
-			y_begin, y_end , x_begin , x_end = cnt['y_begin'],cnt['y_end'], cnt['x_begin'],cnt['x_end']
-			char_image = croped_image[ y_begin:y_end, x_begin:x_end]
+#		print croped_image.shape
+		for cnt in bounding_rects:	
+#			y_begin, y_end , x_begin , x_end = , 
+			char_image = croped_image[ cnt['y_begin']:cnt['y_end'], cnt['x_begin']:cnt['x_end']].copy()
+#			print char_image.shape			
+			cv2.imshow('char_image',char_image)
+			cv2.waitKey(2)
 			char_type = self.pattern_perceptor.recognize(char_image)
 			cnt['type'] = char_type
 

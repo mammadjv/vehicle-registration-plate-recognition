@@ -31,7 +31,7 @@ def find_upper_down_contour(thresh):
 	down_contour = None
 	for cnt in contours:
 		x,y,w,h = cv2.boundingRect(cnt)
-		if(w < image.shape[1]/2):
+		if(w < thresh.shape[1]/2):
 			continue
 		bounding_rect = {'x_begin':x , 'y_begin':y, 'x_end':x+w, 'y_end':y+h, 'cnt':cnt}
 		selected_boundaries.append(bounding_rect)
@@ -40,9 +40,9 @@ def find_upper_down_contour(thresh):
 		upper_contour = selected_boundaries[0]
 		down_contour = selected_boundaries[len(selected_boundaries)-1]
 		for rect in selected_boundaries:
-			if(rect['y_begin'] > upper_contour['y_begin'] and rect['y_begin'] < image.shape[0]/2):
+			if(rect['y_begin'] > upper_contour['y_begin'] and rect['y_begin'] < thresh.shape[0]/2):
 				upper_contour = rect
-			if(rect['y_begin'] < down_contour['y_begin'] and rect['y_begin'] > image.shape[0]/2):
+			if(rect['y_begin'] < down_contour['y_begin'] and rect['y_begin'] > thresh.shape[0]/2):
 				down_contour = rect
 		upper_down_contours = list()
 		upper_down_contours.append(upper_contour)
@@ -156,7 +156,7 @@ is_between(cnt1,cnt2) and float(cnt1['x_end']-cnt2['x_begin'])/float(cnt2['x_end
 	selected_contours = bounding_rects		
 	return selected_contours
 	
-def get_best_contours(image)
+def get_best_contours(image):
 	start = time.time()
 #	image = cv2.resize(image,(300,150))
 	gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -230,8 +230,9 @@ def get_best_contours(image)
 	
 #	cv2.imshow('thresh2', thresh)
 #	cv2.waitKey(0)
-	
+#	print thresh.shape , image.shape
 	upper_down_contours = find_upper_down_contour(thresh_eroded_1x35)
+	draw_rgb_image = image.copy()
 	if(len(upper_down_contours) > 0):
 #		print -upper_down_contours[0]['angle']
 		image = imutils.rotate_bound(image, -upper_down_contours[0]['angle'])
@@ -312,15 +313,17 @@ def get_best_contours(image)
 		y_end = cnt['y_end']
 		croped = draw_rgb_image[y_begin:y_end , x_begin:x_end]
 #		cv2.imwrite('./nums/'+str(croped_nums)+'.jpg',croped)
-		croped_nums = croped_nums + 1
+#		croped_nums = croped_nums + 1
 	for cnt in bounding_rects:
 		x_begin = cnt['x_begin']
 		y_begin = cnt['y_begin']
 		x_end = cnt['x_end']
 		y_end = cnt['y_end']
 #		cv2.rectangle(draw_rgb_image,(x_begin,y_begin),(x_end,y_end),(255,255,0),2)
-
-	return bounding_rects
+	
+	if(len(bounding_rects) < 7):
+		return list(), image
+	return bounding_rects , image
 
 	cv2.imshow('thresh', thresh)
 	cv2.namedWindow('thresh',cv2.WINDOW_NORMAL)
