@@ -46,13 +46,13 @@ class CharRecognizer:
 
 	def find_chars_type(self, bounding_rects, croped_image):
 #		print croped_image.shape
-		for cnt in bounding_rects:	
+		for cnt in bounding_rects:
 #			y_begin, y_end , x_begin , x_end = , 
 			char_image = croped_image[ cnt['y_begin']:cnt['y_end'], cnt['x_begin']:cnt['x_end']].copy()
 #			print char_image.shape			
-			cv2.imshow('char_image',char_image)
-			cv2.waitKey(2)
-			char_type = self.pattern_perceptor.recognize(char_image)
+#			cv2.imshow('char_image',char_image)
+#			cv2.waitKey(2)
+			char_type , prob = self.pattern_perceptor.recognize(char_image)
 			cnt['type'] = char_type
 
 	def get_contours_bounding_rect(self, contours):
@@ -95,37 +95,5 @@ class CharRecognizer:
 
 
 	def find_bounding_rects(self, image):
-		bounding_rects = ocr.get_best_contours(image)
-		return bounding_rects
-		width_0 =  image.shape[1]
-		height_0 = image.shape[0]
-		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-		start = time.time()
-		kernel = np.ones((3,3),np.uint8)
-
-		gray = cv2.erode(gray,kernel,iterations = 1)
-		gray = cv2.dilate(gray,kernel,iterations = 1)
-		gray = cv2.dilate(gray,kernel,iterations = 1)
-		gray = cv2.erode(gray,kernel,iterations = 1)
-		gray = cv2.erode(gray,kernel,iterations = 1)
-		gray = cv2.dilate(gray,kernel,iterations = 1)
-		gray = cv2.erode(gray,kernel,iterations = 1)
-
-	#ret,thresh = cv2.threshold(gray,130,255,cv2.THRESH_BINARY_INV)
-	#thresh = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
-	#thresh = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,11,2)
-	#thresh = cv2.threshold(gray,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-
-	#	cv2.imshow('gray_open_closed' , gray)
-		thresh = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,15,2)
-#		thresh = cv2.erode(thresh,kernel,iterations = 1)
-#		thresh = cv2.dilate(thresh,kernel,iterations = 1)
-		__, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-		if(len(contours) < 8):
-			return list()
-		bounding_rects = self.get_contours_bounding_rect(contours)
-		bounding_rects = self.remove_abuse_contours(bounding_rects, thresh.shape[1]/2,thresh.shape[1],thresh.shape[0])
-		if(len(contours) < 8):
-			return list()
-#		bounding_rects = bounding_rects.sort(key=lambda bounding_rects: bounding_rects.x_begin, reverse=False)
-		return bounding_rects
+		bounding_rects, image= ocr.get_best_contours(image)
+		return bounding_rects, image

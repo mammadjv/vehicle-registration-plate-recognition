@@ -31,4 +31,4 @@ class PatternPerceptor:
 		
 #		print('time ' + str(time.time() - start))
 #		print ('predicted class is:', output_prob.argmax())
-		return output_prob.argmax()
+		return output_prob.argmax() , output_prob[output_prob.argmax()][0][0]
