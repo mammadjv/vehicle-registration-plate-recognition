@@ -33,7 +33,7 @@ def find_upper_down_contour(thresh):
 		x,y,w,h = cv2.boundingRect(cnt)
 		if(w < thresh.shape[1]/2):
 			continue
-		bounding_rect = {'x_begin':x , 'y_begin':y, 'x_end':x+w, 'y_end':y+h, 'cnt':cnt}
+		bounding_rect = {'x_begin':x , 'y_begin':y, 'x_end':x+w, 'y_end':y+h, 'cnt':cnt , 'type':'None'}
 		selected_boundaries.append(bounding_rect)
 	selected_boundaries = sorted(selected_boundaries, key=lambda k: k['y_begin'])
 	if(len(selected_boundaries)>0):
@@ -73,7 +73,7 @@ def get_contours_bounding_rect(contours):
 	bounding_rects = []
 	for cnt in contours:
 	        x,y,w,h = cv2.boundingRect(cnt)
-		bounding_rect = {'x_begin':x , 'y_begin':y, 'x_end':x+w, 'y_end':y+h}
+		bounding_rect = {'x_begin':x , 'y_begin':y, 'x_end':x+w, 'y_end':y+h, 'type': 'None' , 'prob':'-1'}
 		bounding_rects.append(bounding_rect)
 	return bounding_rects
 
@@ -98,9 +98,24 @@ def remove_abuse_contours(thresh_image,bounding_rects, w_max, image_width, image
         	if( h < 10):
 			bounding_rects.pop(i)
                 	continue
+        	if( w < 20 and h < 20):
+			bounding_rects.pop(i)
+                	continue
+		if((i < 2 or i == len(bounding_rects)-1) and h > 7*thresh_image.shape[0]/8):
+			bounding_rects.pop(i)
+			continue
 		contour_image = thresh_image[cnt['y_begin']:cnt['y_end'], cnt['x_begin']:cnt['x_end']]
 		whites =  float(len(np.where((contour_image == 255))[0]))
 		if ((w < image_width/10 and h < image_height/5 and (whites)/(w*h) > 0.1)):
+			bounding_rects.pop(i)
+			continue
+		if (cnt['x_end']  - cnt['x_begin'] < 10):
+			bounding_rects.pop(i)
+			continue
+#		if (cnt['x_end'] > thresh_image.shape[1]-2):
+#			bounding_rects.pop(i)
+#			continue
+		if ((cnt['x_begin'] > 3*thresh_image.shape[1]/5 or cnt['x_begin'] < thresh_image.shape[1]/5) and cnt['y_end'] < thresh_image.shape[0]/2):
 			bounding_rects.pop(i)
 			continue
 #	selected_contours = bounding_rects		
@@ -188,9 +203,9 @@ def get_best_contours(image):
 #	gray = cv2.dilate(gray,kernel,iterations = 1)
 #	gray = cv2.erode(gray,kernel,iterations = 1)
 #	gray = cv2.dilate(gray,kernel,iterations = 1)
-#	ret,thresh = cv2.threshold(gray,80,255,cv2.THRESH_BINARY_INV)
-#	thresh = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV,35,2)
-	thresh = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,35,2)
+#	ret , thresh = cv2.threshold(gray,100,255,cv2.THRESH_BINARY_INV)
+	thresh = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY_INV,35,2)
+#	thresh = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,35,2)
 #	thresh_v1 = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,29,2)
 #	thresh = cv2.threshold(gray,80,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
@@ -262,6 +277,7 @@ def get_best_contours(image):
 
 	thresh[0:thresh.shape[0],0:1] = 0
 	thresh[0:thresh.shape[0],thresh.shape[1]-1:thresh.shape[1]] = 0
+#	cv2.erode()
 #		thresh[0:thresh.shape[0]-1,] = 0
 #		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 		#gray[np.where((gray == 0))] = 150
@@ -291,13 +307,20 @@ def get_best_contours(image):
 #	thresh_eroded_15x1 = cv2.erode(thresh,kernel15x1,iterations = 1)
 #	thresh_eroded_1x35 = cv2.dilate(thresh_eroded_1x35,kernel1x35,iterations = 1)
 
-#	thresh = cv2.erode(thresh,kernel,iterations = 1)
+	
 #	thresh = thresh - thresh_eroded_1x35
 #	thresh = cv2.dilate(thresh,kernel11x11,iterations = 1)
 #	thresh = cv2.erode(thresh,kernel3x1,iterations = 1)
-	thresh_subsection = thresh[3*thresh.shape[0]/5:thresh.shape[0],0:thresh.shape[1]]
-	thresh_subsection = cv2.erode(thresh_subsection,kernel5x1,iterations = 1)
+#	thresh_subsection = thresh[3*thresh.shape[0]/5:thresh.shape[0],0:thresh.shape[1]]
+#	thresh_subsection = cv2.erode(thresh_subsection,kernel5x1,iterations = 1)
+#	thresh[3*thresh.shape[0]/5:thresh.shape[0],0:thresh.shape[1]] = thresh_subsection
+
 	ret , thresh = cv2.threshold(thresh,254,255,cv2.THRESH_BINARY)
+
+#	thresh_subsection = thresh[0:thresh.shape[0],3*thresh.shape[1]/5:thresh.shape[1]]
+#	thresh_subsection = cv2.erode(thresh_subsection,kernel1x5,iterations = 1)
+#	ret , thresh = cv2.threshold(thresh,254,255,cv2.THRESH_BINARY)
+#	thresh[0:thresh.shape[0],3*thresh.shape[1]/5:thresh.shape[1]] = thresh_subsection
 #	thresh = cv2.resize(thresh,(140,80))
 	__, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 	
@@ -320,10 +343,12 @@ def get_best_contours(image):
 		x_end = cnt['x_end']
 		y_end = cnt['y_end']
 #		cv2.rectangle(draw_rgb_image,(x_begin,y_begin),(x_end,y_end),(255,255,0),2)
-	
+	cv2.imshow('thresh', thresh)
+	cv2.namedWindow('thresh',cv2.WINDOW_NORMAL)
+	cv2.moveWindow("thresh",10,10)	
 	if(len(bounding_rects) < 7):
-		return list(), image
-	return bounding_rects , image
+		return list(), image, image
+	return bounding_rects , draw_rgb_image, thresh
 
 	cv2.imshow('thresh', thresh)
 	cv2.namedWindow('thresh',cv2.WINDOW_NORMAL)
