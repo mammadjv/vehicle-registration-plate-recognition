@@ -14,7 +14,6 @@ import cv2
 class PlateDetectorBase(PlateDetector):
 	def __init__(self):
 		PlateDetector.__init__(self)
-#		rospy.init_node('plate_detector_node', anonymous=True)
 		self.image_subscriber = rospy.Subscriber("/image", ImageMsg, self.on_image_received)
 		self.plates_publisher = rospy.Publisher('/plates', Plates, queue_size=1000)
 		self.cycle_complete_publisher = rospy.Publisher('/cycle_completed',Bool,queue_size = 1)
