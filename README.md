@@ -7,11 +7,13 @@ In this project, a two-stage system is implemented for detection and recognition
 
 ##
 Open two terminal tabs(or use tmux :D).
+
 In first terminal tab enter:
 ```
 1- ./launch.sh
 ```
 and just wait till all initializations to be done(takes 20 or so seconds).
+
 In the second tab  enter:
 ```
 2- ./start_cycle.sh"
