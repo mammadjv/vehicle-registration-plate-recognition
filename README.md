@@ -10,11 +10,11 @@ Open two terminal tabs(or use tmux :D).
 
 In first terminal tab enter:
 ```
-1- ./launch.sh
+./launch.sh
 ```
 and just wait till all initializations be done(takes 20 or so seconds).
 
 Then in the second tab enter:
 ```
-2- ./start_cycle.sh"
+./start_cycle.sh"
 ```
