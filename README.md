@@ -16,5 +16,5 @@ and just wait till all initializations be done(takes 20 or so seconds).
 
 Then in the second tab enter:
 ```
-./start_cycle.sh"
+./start_cycle.sh
 ```
