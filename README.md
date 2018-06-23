@@ -6,6 +6,25 @@ For Plate Detection phase, that includes finding the location of the plates in e
 Next level, Plate Recognition, that predicts ID of the detected plates and actually behaves as an OCR module, includes two sub-levels: 
 First, image segmentation and some low-level image processing algorithms are used to find character contours in the plate. Then, a deep convolutional neural network(SqueezeNet) with 22 classes is used to calculate the type of each character.
 
+### Demo
+
+<p align="center">
+  Detection
+</p>
+<p align="center">
+  <img src="demo/detection.gif", width="360">    
+</p>
+
+<br>
+<br>
+<p align="center">
+  Recognition
+</p>
+<p align="center">
+  <img src="demo/recognition.gif", width="360">    
+</p>
+
+
 
 ### How to install
 1. First install forked version of [py-faster-rcnn](https://github.com/mammadjv/py-faster-rcnn) that includes some changes in configurations and files.
@@ -40,3 +59,4 @@ Then in the second tab enter:
 
 
 **here you go!**
+
