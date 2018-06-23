@@ -32,7 +32,6 @@ class CharRecognizerBase(CharRecognizer):
 			plate_point = {"x_begin" : plate_location.top_left.x,"y_begin" : plate_location.top_left.y, "x_end" : plate_location.down_right.x, "y_end" : plate_location.down_right.y}
 			plates_location.append(plate_point)
 		
-#		croped_images = list()
 		char_list , croped_images = self.find_char_sequences(CvBridge().imgmsg_to_cv2(image.rgb, "bgr8"), plates_location)
 		cycle_state_msg = Bool()
 		cycle_state_msg.data = True

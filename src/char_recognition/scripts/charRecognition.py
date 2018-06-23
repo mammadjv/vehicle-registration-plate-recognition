@@ -17,6 +17,7 @@ class CharRecognizer:
 	def __init__(self):
 		self.i = 0
 		print "char_recognition module created!"
+		## path to caffemodel and prototxt files
 		self.pattern_perceptor = PatternPerceptor('/home/mj/datasets/ocr_data/train/deploy.prototxt', '/home/mj/datasets/ocr_data/train/numbers.caffemodel')
 
 	def find_char_sequences(self, image, plates_location):
@@ -51,7 +52,7 @@ class CharRecognizer:
 #				cv2.putText(draw_image,cnt['type'],(cnt['x_begin'],cnt['y_end']), cv2.FONT_HERSHEY_SIMPLEX, 0.8,(255,255,255),3,cv2.LINE_AA)
 #				draw_image[y_begin:y_end, x_begin:x_end] = rgb_sub
 			selected_centers = list()
-			selcted_center_index = 0
+			selected_center_index = 0
 			max_prob = 0
 			i = 0
 			for cnt in bounding_rects:
