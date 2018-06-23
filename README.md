@@ -9,7 +9,7 @@ First, image segmentation and some low-level image processing algorithms are use
 ### Demo
 
 <p align="center">
-  Detection
+  Detection in 20-25HZ for each frame
 </p>
 <p align="center">
   <img src="demo/detection.gif", width="360">    
@@ -18,7 +18,8 @@ First, image segmentation and some low-level image processing algorithms are use
 <br>
 <br>
 <p align="center">
-  Recognition
+  Recognition time for each character is 0.002s, that reduces overall frequency of the system to 13-17 HZ.
+  Actually recognition phase depends on number of detected plates in a frame.
 </p>
 <p align="center">
   <img src="demo/recognition.gif", width="360">    
