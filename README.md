@@ -9,7 +9,7 @@ First, image segmentation and some low-level image processing algorithms are use
 ### Demo
 
 <p align="center">
-  Detection in 20-25HZ for each frame
+  Detection frequency 20-25HZ
 </p>
 <p align="center">
   <img src="demo/detection.gif", width="360">    
