@@ -27,7 +27,7 @@ First, image segmentation and some low-level image processing algorithms are use
 
 ### How to install
 1. First install forked version of [py-faster-rcnn](https://github.com/mammadjv/py-faster-rcnn) that includes some changes in configurations and files.
-2. Install Caffe from [here](http://caffe.berkeleyvision.org/install_apt.html)
+2. [Install]((http://caffe.berkeleyvision.org/install_apt.html)) Caffe.
 3. Install ROS(instructions can be found [here](http://wiki.ros.org/kinetic/Installation/Ubuntu)).
 4. Download the code from this repository:
 ```
