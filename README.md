@@ -25,23 +25,29 @@ First, image segmentation and some low-level image processing algorithms are use
   <img src="demo/recognition.gif", width="360">    
 </p>
 
-
-
 ### How to install
 1. First install forked version of [py-faster-rcnn](https://github.com/mammadjv/py-faster-rcnn) that includes some changes in configurations and files.
-2. Install ROS(instructions can be found [here](http://wiki.ros.org/kinetic/Installation/Ubuntu)).
-3. Download the code from this repository:
+2. Install Caffe from [here](http://caffe.berkeleyvision.org/install_apt.html)
+3. Install ROS(instructions can be found [here](http://wiki.ros.org/kinetic/Installation/Ubuntu)).
+4. Download the code from this repository:
 ```
 git clone https://github.com/mammadjv/vehicle-registration-plate-recognition.git
 ```
-4. Download the trained file on plates dataset from [here](https://drive.google.com/open?id=1reVNen-nH2G0KaQyC1WkTCn-XR1EgmpE).
-5. Change model paths in /path/to/vehicle-registration-plate-recognition/src/plate_detector/scripts/plateDetector.py, in line 36.
-6. Change model paths in /path/to/vehicle-registration-plate-recognition/src/char_recognition/scripts/charRecognition.py, in line 20.
-7. Add your video path to /path/to/vehicle-registration-plate-recognition/src/camera/src/camera/camera.cpp, line 13.
-8. Change your directory to /path/to/vehicle-registration-plate-recognition and then enter:
+5. Download the trained file on plates dataset from [here](https://drive.google.com/open?id=1reVNen-nH2G0KaQyC1WkTCn-XR1EgmpE).
+6. Change model paths in /path/to/vehicle-registration-plate-recognition/src/plate_detector/scripts/plateDetector.py, in line 36.
+7. Change model paths in /path/to/vehicle-registration-plate-recognition/src/char_recognition/scripts/charRecognition.py, in line 20.
+8. Add your video path to /path/to/vehicle-registration-plate-recognition/src/camera/src/camera/camera.cpp, line 13.
+9. Change your directory to /path/to/vehicle-registration-plate-recognition and then enter:
 ```
 catkin_make
 ```
+
+### Why to use ROS?
+  Because the ROS is so appropriate for real time systems. Specially you can use different programming languages in your code and in my case, implement low-level image processing methods you want to perform on image in faster languages like C++. Here you can see the graph of relations between nodes in the system.
+<p align="center">
+  <img src="rosgraph.png", width="360">    
+</p>
+
 ### How to run
 
 ##
