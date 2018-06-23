@@ -45,7 +45,7 @@ catkin_make
 ### Why to use ROS?
   Because the ROS is so appropriate for real time systems. Specially you can use different programming languages in your code and in my case, implement low-level image processing methods you want to perform on image in faster languages like C++. Here you can see the graph of relations between nodes in the system.
 <p align="center">
-  <img src="rosgraph.png", width="360">    
+  <img src="rosgraph.png", width="480" height="150">    
 </p>
 
 ### How to run
