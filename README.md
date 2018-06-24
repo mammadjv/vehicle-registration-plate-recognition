@@ -12,7 +12,9 @@ First, image segmentation and some low-level image processing algorithms are use
   Detection frequency 20-25HZ
 </p>
 <p align="center">
-  <img src="demo/detection.gif", width="360">    
+  <video width="320" height="240" autoplay>
+    <source src="demo/ezgif.com-crop.mp4" type="video/mp4">
+  </video>
 </p>
 
 <br>
