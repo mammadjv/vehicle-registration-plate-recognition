@@ -4,7 +4,7 @@
 In this project, that was my bachelor thesis, a two-stage system is implemented for detection and recognition of the Persian plates in urban traffic cameras. 
 For Plate Detection phase, that includes finding the location of the plates in each frame of the test video, the Faster-RCNN method is used that generates plates' bounding boxes. 
 Next level, Plate Recognition, that predicts ID of the detected plates and actually behaves as an OCR module, includes two sub-levels: 
-First, image segmentation and some low-level image processing algorithms are used to find character contours in the plate. Then, a deep convolutional neural network(SqueezeNet) with 22 classes is used to calculate the type of each character.
+First, image segmentation and some low-level image processing algorithms are used to find character contours in the plate. Then, a deep convolutional neural network(SqueezeNet) with 22 classes is used to determine type of each character.
 
 ### Demo
 
