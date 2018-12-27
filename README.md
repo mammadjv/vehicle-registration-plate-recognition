@@ -58,7 +58,7 @@ In the first tab:
 ```
 ./launch.sh
 ```
-and just wait till all initializations be done(takes 20 or so seconds).
+and just wait till all initializations are over(takes 20 or so seconds).
 
 Then in the second tab enter:
 ```
