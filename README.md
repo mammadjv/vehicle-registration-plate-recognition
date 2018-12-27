@@ -1,10 +1,10 @@
 # Implementation of Vehicle Registration Plate Recognition using CNNs, my Bachelor Thesis.
 
 ##
-In this project, that was my bachelor thesis, a two-stage system is implemented for detection and recognition of the Persian plates in urban traffic cameras. 
-For Plate Detection phase, that includes finding the location of the plates in each frame of the test video, the Faster-RCNN method is used that generates plates' bounding boxes. 
-Next level, Plate Recognition, that predicts ID of the detected plates and actually behaves as an OCR module, includes two sub-levels: 
-First, image segmentation and some low-level image processing algorithms are used to find character contours in the plate. Then, a deep convolutional neural network(SqueezeNet) with 22 classes is used to determine type of each character.
+In this project, that was my bachelor thesis, a two-stage system is implemented for detection and recognition of Persian plates in urban traffic cameras. 
+For the **Plate Detection** phase, that includes finding the location of plates in each frame of the test video, the **Faster-RCNN** method is used that outputs detected plates' bounding boxes. 
+Next level, Plate Recognition, that predicts Id of the detected plates and actually behaves as an OCR module, includes two sub-levels: 
+First, image segmentation and some low-level image processing algorithms are used to find characters' contours in a given plate. Then, a deep convolutional neural network(SqueezeNet) with 22 classes is used to determine type of each character.
 
 ### Demo
 
@@ -18,8 +18,8 @@ First, image segmentation and some low-level image processing algorithms are use
 <br>
 <br>
 <p align="center">
-  Recognition time for each character is 0.002s, that reduces overall frequency of the system to 13-17 HZ.
-  Actually recognition phase depends on number of detected plates in a frame.
+  Recognition time per character = 0.002s, that reduces overall frequency of the system to 13-17 HZ.
+  Actually frequency of recognition phase depends on the number of detected plates in a frame.
 </p>
 <p align="center">
   <img src="demo/recognition.gif", width="360">    
@@ -33,7 +33,7 @@ First, image segmentation and some low-level image processing algorithms are use
 ```
 git clone https://github.com/mammadjv/vehicle-registration-plate-recognition.git
 ```
-5. Download the trained file on plates dataset from [here](https://drive.google.com/open?id=1reVNen-nH2G0KaQyC1WkTCn-XR1EgmpE).
+5. Download the pre-trained file on plates dataset from [here](https://drive.google.com/open?id=1reVNen-nH2G0KaQyC1WkTCn-XR1EgmpE).
 6. Change model paths in /path/to/vehicle-registration-plate-recognition/src/plate_detector/scripts/plateDetector.py, in line 36.
 7. Change model paths in /path/to/vehicle-registration-plate-recognition/src/char_recognition/scripts/charRecognition.py, in line 20.
 8. Add your video path to /path/to/vehicle-registration-plate-recognition/src/camera/src/camera/camera.cpp, line 13.
@@ -43,7 +43,8 @@ catkin_make
 ```
 
 ### Why to use ROS?
-  Because the ROS is so appropriate for real time systems. Specially you can use different programming languages in your code and implement low-level image processing methods that you want to perform on an image in faster languages like C++. Here you can see the relations graph between nodes in the system.
+  It enables us to use different programming languages(In addition to other benefits). For example, to implement low-level image processing methods, we can use faster languages like **C++** compared to **Python**.  <br>
+Here we can see the relations graph between nodes in our system.
 <p align="center">
   <img src="rosgraph.png", width="480" height="150">    
 </p>
@@ -51,9 +52,9 @@ catkin_make
 ### How to run
 
 ##
-Open two terminal tabs(or use tmux :D).
+Open two terminal tabs(or use tmux 😜).
 
-In first terminal tab enter:
+In the first tab:
 ```
 ./launch.sh
 ```
